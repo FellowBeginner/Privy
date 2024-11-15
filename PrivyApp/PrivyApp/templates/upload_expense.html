@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block subheader_title %}Upload Expenses{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <h2 class="form-title">{{ 'Upload Expenses' }}</h2>
+        <form action="{{ url_for('upload_expense') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".xlsx" required>
+        <button type="submit">Upload</button>
+    </form>
+    </div>
+{% endblock %}

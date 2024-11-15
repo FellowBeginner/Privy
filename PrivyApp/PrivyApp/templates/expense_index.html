@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="subheader">
+        <a href="{{ url_for('index') }}" class="cus-button">&#9664; Back</a>
+        <h2 class="subheader-title">{{ 'Expense Manager' }}</h2>
+        <div>
+            <a href="{{ url_for('export_csv_expense') }}" class="cus-button">Export CSV</a>
+            <a href="{{ url_for('add_expense') }}" class="cus-button">Add Expense</a>
+        </div>
+    </div>
+
+    <br>
+    <form method="GET" action="{{ url_for('expense_manager') }}">
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" value="{{ request.args.get('start_date') }}">
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" value="{{ request.args.get('end_date') }}">
+        <label for="min_amount">Min Amount:</label>
+        <input type="number" id="min_amount" name="min_amount" step="0.01" value="{{ request.args.get('min_amount') }}">
+        <label for="max_amount">Max Amount:</label>
+        <input type="number" id="max_amount" name="max_amount" step="0.01" value="{{ request.args.get('max_amount') }}">
+        <button type="submit">Filter</button>
+    </form>
+
+    <table class="tb-list-view">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Reason</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ expense.description }}</td>
+                <td>₹{{ expense.amount }}</td>
+                <td>{{ expense.date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ expense.reason }}</td>
+                <td>
+                    <a href="{{ url_for('edit_expense', id=expense.id) }}">Edit</a>
+                    <a href="{{ url_for('delete_expense', id=expense.id) }}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Placeholder for Chart -->
+    <div id="chart-container">
+        <div id="myChart">
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Expense', 'Amount'],
+                {% for description, total_amount in expenses_chart %}
+                ['{{ description }} (₹{{ total_amount }})', {{ total_amount }}],
+                {% endfor %}
+            ]);
+
+            var options = {
+                title: 'Expense Breakdown (Total: ₹{{ total_amount }})',
+                pieHole: 0.4,
+                pieSliceText: 'label',
+                legend: {
+                    position: 'bottom'
+                }
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('chart-container'));
+            chart.draw(data, options);
+        }
+    </script>
+{% endblock %}

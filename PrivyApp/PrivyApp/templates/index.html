@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class='menu-container'>
+    <button class='menu-button'> <a href="{{ url_for('expense_manager') }}">Expense Manager</a></button>
+    <button class='menu-button'> <a href="{{ url_for('password_manager') }}">Password Manager</a></button>
+    <button class='menu-button'> <a href="{{ url_for('files_backup_manager') }}">Folder and Files Sync</a></button>
+</div>
+
+{% endblock %}

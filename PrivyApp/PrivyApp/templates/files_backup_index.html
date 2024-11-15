@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-container">
+    <h2 class="form-title">{{ 'Files Backup Sync' }}</h2>
+    <form method="POST" action="{{ url_for('files_backup_manager') }}">
+        <label for="source_folder">Source Folder</label>
+        <input type="text" id="source_folder" name="source_folder" placeholder="C:\srcFolder">
+        <label for="destination_folder">Destination Folder</label>
+        <input type="text" id="destination_folder" name="destination_folder" placeholder="C:\destFolder" />
+        <button type="submit">Start Sync</button>
+    </form>
+</div>
+{% endblock %}
